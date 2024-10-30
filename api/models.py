@@ -1,11 +1,31 @@
 import os
 from .util import post_to_ops
+from pyairtable import Api
 from pyairtable.orm import fields as F
 from pyairtable.orm import Model
+from functools import cached_property
 
 Model.at_url = lambda self: f"https://airtable.com/{self.Meta.base_id}/{self.Meta.table_name}/{self.id}"
 Model.slack_url = lambda self: f"<{self.at_url()}|{type(self).__name__} {self.id}>"
 
+# deadly work:
+original_Api_init = Api.__init__
+def swizzled_Api_init(
+        self,
+        api_key: str,
+        timeout = None,
+        retry_strategy = True,
+        endpoint_url: str = "https://api.airtable.com",
+        use_field_ids: bool = False
+    ):
+    original_Api_init(
+        self,
+        api_key,
+        timeout=timeout,
+        retry_strategy=retry_strategy,
+        endpoint_url=os.environ.get("AIRTABLE_ENDPOINT_URL", "https://api.airtable.com")
+    )
+Api.__init__ = swizzled_Api_init
 class BaseMeta:
     base_id = "appTeNFYcUiYfGcR6"
     api_key = os.environ.get("AIRTABLE_PAT")

@@ -66,7 +66,9 @@ TYPE_MAPPING = {
     "agh_random_stickers": AGHRandomStickersFulfiller(),
     "third_party_physical": QueueForNightlyFulfiller(),
     "third_party_virtual": SlackFulfiller("please do the {order.shop_item_name} thing for {order.slack_url()}!"),
-    "dummy": DummyFulfiller()
+    "dummy": DummyFulfiller(),
+    "minuteman": QueueForNightlyFulfiller(),
+    "special": QueueForNightlyFulfiller()
 }
 
 def fulfill(order: ShopOrder):

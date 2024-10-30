@@ -18,7 +18,7 @@ def process_fresh_orders():
 
     post_to_noise(f"hey <@U06QK6AG3RD> - :-/ fresh orders cron had {len(unprocessed_orders)} hits, what's up with that?")
     for order in unprocessed_orders:
-        validate_and_freeze_order(order)
+        validate_and_freeze_order(order, save=False)
     return {'count': len(unprocessed_orders)}
 
 @router.get("/expire_outstanding_otps")

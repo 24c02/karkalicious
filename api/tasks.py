@@ -51,7 +51,7 @@ def freeze_address(order: ShopOrder, person: Person):
 
     order.save()
 
-def validate_and_freeze_order(order: ShopOrder):
+def validate_and_freeze_order(order: ShopOrder, save=True):
     post_to_noise(f"doing initial processing on {order.slack_url()}")
     item: ShopItem = order.shop_item[0]
     person: Person = order.recipient[0]
