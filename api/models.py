@@ -83,7 +83,7 @@ class Person(Model):
     # votes_expended = F.NumberField('votes_expended', readonly=True)
     # minimum_pending_vote_requirement = F.NumberField('minimum_pending_vote_requirement', readonly=True)
     # vote_balance_minus_minimum_pending_requirement = F.NumberField('vote_balance_minus_minimum_pending_requirement', readonly=True)
-    # ysws_verification_user = F.LinkField['YswsVerification']('YSWS Verification User', model='YswsVerification')
+    ysws_verification_user = F.LinkField['YswsVerification']('YSWS Verification User', model='YswsVerification')
     verification_status = F.LookupField[str]('verification_status')
     # votes_remaining_for_next_pending_ship = F.NumberField('votes_remaining_for_next_pending_ship', readonly=True)
     # votes_required_for_all_pending_ships = F.NumberField('votes_required_for_all_pending_ships', readonly=True)
@@ -101,9 +101,10 @@ class Person(Model):
     # trust_factor = F.PercentField('trust_factor', readonly=True)
     # mean_discordance = F.NumberField('mean_discordance', readonly=True)
     # slack_promotion_requested = F.CheckboxField('slack_promotion_requested')
-    # eligible_to_vote = F.NumberField('eligible_to_vote', readonly=True)
+    # eligible_to_vote = F.NumberFixeld('eligible_to_vote', readonly=True)
     verification_alum = F.LookupField[bool]('verification_alum')
-    has_ordered_free_stickers = F.CheckboxField('has_ordered_free_stickers', readonly=True)
+    # has_ordered_free_stickers = F.CheckboxField('has_ordered_free_stickers', readonly=True)
+    free_stickers_dupe_check = F.CheckboxField('free_stickers_dupe_check', readonly=True)
 
 class ShopItem(Model):
     class Meta(BaseMeta):
@@ -211,6 +212,10 @@ class ShopOrder(Model):
 
 # THIS IS FUCKING GROSS
 setattr(ShopOrder, "at_url", lambda self: f"https://airtable.com/{self.Meta.base_id}/{self.Meta.table_name}/viwTVymHDzpUIlkIK/{self.id}")
+
+class YswsVerification(Model):
+    class Meta(BaseMeta):
+        table_name = 'tblM3cGY2vCzNaJO7' # 'YSWS Verification'
 
 class ShopAddress(Model):
     class Meta(BaseMeta):

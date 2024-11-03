@@ -12,7 +12,8 @@ router = APIRouter(
 
 @router.get("/process_fresh_orders")
 def process_fresh_orders():
-    unprocessed_orders = ShopOrder.all(formula=match({"status": "fresh", "dev": environ.get("ENV") == "DEV"}))
+    # 10 mins to fix race condition where cron runs as on-demand processing is happening
+    unprocessed_orders = ShopOrder.all(formula=f'AND({match({"status": "fresh", "dev": environ.get("ENV") == "DEV"})}, DATETIME_DIFF(NOW(), CREATED_TIME(), "minutes") > 10)')
     if not unprocessed_orders:
         return {"count":0}
 

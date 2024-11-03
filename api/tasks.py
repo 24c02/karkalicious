@@ -54,13 +54,15 @@ def freeze_address(order: ShopOrder, person: Person):
 def validate_and_freeze_order(order: ShopOrder, save=True):
     post_to_noise(f"doing initial processing on {order.slack_url()}")
     item: ShopItem = order.shop_item[0]
+    if not order.recipient:
+        order.reject("who are you?!?!?!?!?")
     person: Person = order.recipient[0]
     freeze_address(order, person)
     person.invalidate_otp()
 
     item_is_free_stickers = item.id == "recHByvKaaeXaGsPq"
 
-    if item_is_free_stickers and person.has_ordered_free_stickers:
+    if item_is_free_stickers and person.free_stickers_dupe_check:
         return order.reject("you've already ordered some!")
     #
     # if item.coming_soon:
@@ -70,7 +72,8 @@ def validate_and_freeze_order(order: ShopOrder, save=True):
     order.save()
     person.fetch()
     # rejected unless free sticekrs
-
+    if not person.ysws_verification_user:
+        return order.reject("hey, this is awkward...you don't have a verification record? weird, please ask in #high-seas-help!")
     if person.verification_alum[0]:
         return order.reject("you've ascended past eligibility for this program...")
     if person.verification_status[0] == "Ineligible":

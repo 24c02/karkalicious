@@ -34,7 +34,7 @@ def cause_error():
 @app.get("/health-check")
 def status_check():
     nora = Person.from_id("rec5TFOw9pNNgRIKb")
-    nora.save() # see if someone broke the schema
+    nora.save()  # see if someone broke the schema
     return {"status": "we gucci!!"}
 
 @app.post("/process/{rec}")
